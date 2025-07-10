@@ -15,10 +15,10 @@ window.cfg = {
     {
       title: "Contempt",
       options: [
-        { image: "images\a1.jpg", comment: "Retour sur A1.", value: 1 },
-        { image: "images\a2.jpg", comment: "Retour sur A2.", value: 2 },
-        { image: "images\a3.jpg", comment: "Retour sur A3.", value: 3 },
-        { image: "images\a4.jpg", comment: "Retour sur A4.", value: 4 }
+        { image: "images/a1.jpg", comment: "Retour sur A1.", value: 1 },
+        { image: "images/a2.jpg", comment: "Retour sur A2.", value: 2 },
+        { image: "images/a3.jpg", comment: "Retour sur A3.", value: 3 },
+        { image: "images/a4.jpg", comment: "Retour sur A4.", value: 4 }
       ]
     },
     {
