@@ -6,10 +6,10 @@ window.cfg = {
     {
       title: "Disgust",
       options: [
-        { image: "images\\a1.jpg", comment: "Commentaire pour la réponse A1.", value: 1 },
-        { image: "images\\a2.jpg", comment: "Commentaire pour la réponse A2.", value: 2 },
-        { image: "images\\a3.jpg", comment: "Commentaire pour la réponse A3.", value: 3 },
-        { image: "images\\a4.jpg", comment: "Commentaire pour la réponse A4.", value: 4 }
+        { image: "images\a1.jpg", comment: "Commentaire pour la réponse A1.", value: 1 },
+        { image: "images\a2.jpg", comment: "Commentaire pour la réponse A2.", value: 2 },
+        { image: "images\a3.jpg", comment: "Commentaire pour la réponse A3.", value: 3 },
+        { image: "images\a4.jpg", comment: "Commentaire pour la réponse A4.", value: 4 }
       ]
     },
     {
