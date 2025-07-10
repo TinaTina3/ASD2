@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Quiz autonome avec config.js</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: auto; }
+    .question { margin-bottom: 40px; border-bottom: 1px solid #ccc; padding-bottom: 20px; }
+    .options { display: flex; flex-wrap: wrap; gap: 20px; margin: 15px 0; }
+    .option { text-align: center; cursor: pointer; }
+    .option img { width: 150px; border: 2px solid transparent; transition: border-color .2s; }
+    .option input[type="radio"] { display: none; }
+    .option input:checked + img { border-color: #007BFF; }
+    textarea { width: 100%; height: 60px; resize: none; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <h1>哪個表情不一樣?</h1>
+
+  <form id="quizForm">
+    <div>
+      <label for="lastname">姓名&nbsp;:</label>
+      <input type="text" id="lastname" name="lastname" required />
+    </div>
+    <div>
+      <label for="email">電子信箱&nbsp;:</label>
+      <input type="text" id="email" name="email" required />
+    </div>
+
+    <div id="questionsContainer"></div>
+
+    <button type="submit">Valider mes réponses</button>
+  </form>
+
+  <!-- 1) Container pour afficher les résultats -->
+  <div id="resultContainer" style="display:none; max-width:800px; margin:auto; padding:20px;"></div>
+
+  <!-- Charger d'abord la config externe -->
+  <script src="config.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 2) On doit récupérer form et resultDiv AVANT de les utiliser
+      const form = document.getElementById("quizForm");
+      const resultDiv = document.getElementById("resultContainer");
+
+      const container = document.getElementById("questionsContainer");
+      const questions = window.cfg && window.cfg.questions;
+      if (!questions) {
+        container.innerHTML = "<p>Impossible de charger la configuration.</p>";
+        return;
+      }
+
+      questions.forEach((q, qi) => {
+        const bloc = document.createElement("div");
+        bloc.className = "question";
+        bloc.dataset.index = qi;
+
+	if (qi === 0) bloc.classList.add("active");
+
+        const h2 = document.createElement("h2");
+        h2.textContent = q.title;
+        bloc.appendChild(h2);
+
+        const optsDiv = document.createElement("div");
+        optsDiv.className = "options";
+
+        const feedback = document.createElement("textarea");
+        feedback.readOnly = true;
+        feedback.placeholder = "Le commentaire s’affichera ici.";
+
+        q.options.forEach((opt, oi) => {
+          const label = document.createElement("label");
+          label.className = "option";
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = "q" + qi;
+          radio.value = oi;
+
+          const img = document.createElement("img");
+          img.src = opt.image;
+          img.alt = `${q.title} – option ${oi + 1}`;
+
+	  img.addEventListener("click", () => {
+	  // coche la radio
+	  radio.checked = true;
+
+	  // affiche le commentaire
+	  feedback.value = opt.comment;
+
+	  // empêche tout nouveau clic SUR LES IMAGES
+	  optsDiv.querySelectorAll("img").forEach(img2 => {
+	    img2.style.pointerEvents = "none";
+	    // on peut aussi réduire l’opacité des non-choisies :
+	    if (img2 !== img) img2.style.opacity = "0.5";
+
+  // on passe à la question suivante
+  const next = document.querySelector(`.question[data-index="${qi+1}"]`);
+  if (next) {
+    // légère attente pour laisser le feedback s’afficher
+    setTimeout(() => next.classList.add("active"), 200);
+  }
+	  });
+	});
+
+
+          label.appendChild(radio);
+          label.appendChild(img);
+          optsDiv.appendChild(label);
+        });
+
+        bloc.appendChild(optsDiv);
+        bloc.appendChild(feedback);
+        container.appendChild(bloc);
+      });
+
+      // Gestion du submit : calcul et affichage des résultats
+      form.addEventListener("submit", e => {
+        e.preventDefault();
+        const data = new FormData(form);
+        const user = {
+          nom: data.get("lastname"),
+          email: data.get("email")
+        };
+
+        let totalScore = 0;
+        let html = `<h2>Récapitulatif de ${user.prenom} ${user.nom}</h2><ul>`;
+
+        questions.forEach((q, qi) => {
+          const choixIdx = data.get("q" + qi);
+          if (choixIdx === null) {
+            html += `<li>${q.title} : sans réponse</li>`;
+          } else {
+            const opt = q.options[Number(choixIdx)];
+            totalScore += opt.value;
+            html += `
+              <li>
+                ${q.title} : valeur <strong>${opt.value}</strong><br>
+                “${opt.comment}”
+              </li>
+            `;
+          }
+        });
+        html += `</ul><h3>Score total : ${totalScore}</h3>`;
+
+        // masque le formulaire, affiche le résultat
+        form.style.display = "none";
+        resultDiv.innerHTML = html;
+        resultDiv.style.display = "block";
+      });
+    });
+  </script>
+</body>
+</html>
