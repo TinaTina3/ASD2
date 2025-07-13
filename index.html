@@ -11,11 +11,11 @@
 
     <form id="quizForm">
         <div>
-            <label for="姓名">Nom&nbsp;:</label>
+            <label for="name">姓名&nbsp;:</label>
             <input type="text" id="name" name="name" autocomplete="family-name" required />
         </div>
         <div>
-            <label for="電子信箱">Email&nbsp;:</label>
+            <label for="email">電子信箱&nbsp;:</label>
             <input type="text" id="email" name="email" autocomplete="email" required />
         </div>
 
@@ -29,12 +29,24 @@
     <script src="config.js"></script>
 
     <script>
+        function shuffle(array) {
+            return array
+                .map(value => ({ value, sort: Math.random() }))
+                .sort((a, b) => a.sort - b.sort)
+                .map(({ value }) => value);
+        };
+
         document.addEventListener("DOMContentLoaded", () => {
             const form = document.getElementById("quizForm");
             const submitBtn = document.getElementById("submitBtn");
             const resultDiv = document.getElementById("resultContainer");
             const container = document.getElementById("questionsContainer");
             const questions = window.cfg?.questions;
+            const maxOptionsLength = Math.max(...questions.map(q => q.options.length));
+            const letters = Array.from({ length: maxOptionsLength }, (_, i) =>
+                String.fromCharCode(65 + i) // 65 = code ASCII de 'A'
+            );
+
             const feedbacks = window.cfg?.feedbacks;
 
             if (!questions) {
@@ -60,18 +72,35 @@
                 feedback.id = "feedback" + qi;
                 feedback.readOnly = true;
 
-                q.options.forEach((opt, oi) => {
+                q.options.forEach((opt, index) => {
+                    opt.id = `q${qi}_opt${index}`; 
+                });
+
+                const shuffledOpts = shuffle(q.options);
+                shuffledOpts.forEach((opt, oi) => {
+                    opt.letter = letters[oi];
+                });
+
+                q.shuffledOptions = shuffledOpts;
+
+
+                shuffledOpts.forEach((opt, oi) => {
                     const label = document.createElement("label");
                     label.className = "option";
 
                     const radio = document.createElement("input");
                     radio.type = "radio";
                     radio.name = "q" + qi;
-                    radio.value = oi;
+                    radio.value = opt.id;
 
                     const img = document.createElement("img");
                     img.src = opt.image;
-                    img.alt = `${q.title} – option ${oi + 1}`;
+                    img.alt = `${q.title} – option ${opt.letter}`;
+
+                    const badge = document.createElement("span");
+                    badge.className = "option-letter";
+                    badge.textContent = opt.letter;
+                    label.appendChild(badge);
 
                     label.appendChild(radio);
                     label.appendChild(img);
@@ -143,15 +172,22 @@
                     if (choixIdx === null) {
                         html += `<li>${q.title} : sans réponse</li>`;
                     } else {
-                        const opt = q.options[parseInt(choixIdx)];
+                        const chosenId = data.get("q" + qi);
+                        const opt = q.options.find(o => o.id === chosenId);
+
                         if (opt.value === true) bonnesReponses++;
                         const isGood = opt.value === true;
+                        const correctOpt = q.shuffledOptions.find(o => o.value === true);
+                        const correctLetter = correctOpt?.letter || '?';
                         html += `
-      <div class="response-item ${isGood ? 'correct' : 'incorrect'} flip-in">
-        <h4>${q.title}</h4>
-        <img src="${opt.image}" alt="選擇照片" class="selected-image" />
-        <p><strong>Commentaire :</strong> ${q.comment}</p>
-      </div>
+          <div class="response-item ${isGood ? 'correct' : 'incorrect'} flip-in">
+            <h4>${q.title}</h4>
+            <div class="image-wrap">
+              <img src="${opt.image}" alt="選擇照片" class="selected-image" />
+              <span class="option-letter">${opt.letter}</span>
+            </div>
+            <p><strong>${correctLetter}</strong> ${q.comment} </p>
+          </div>
 `;
 
                     }
@@ -163,12 +199,12 @@
                 const finalComment = feedback?.comment || "Pas de feedback disponible.";
                 const feedbackClass = percentage >= 50 ? 'success' : 'error';
                 html += `
-      <div class="score-summary ${feedbackClass} flip-in">
-        <h2>總成績</h2>
-        <p><strong>正確回答題數 :</strong> ${bonnesReponses} / ${totalQuestions}</p>
-        <p><strong>得分 :</strong> ${percentage}%</p>
-        <p class="final-feedback">${finalComment}</p>
-      </div>
+          <div class="score-summary ${feedbackClass} flip-in">
+            <h2>總成績</h2>
+            <p><strong>正確回答題數 :</strong> ${bonnesReponses} / ${totalQuestions}</p>
+            <p><strong>得分 :</strong> ${percentage}%</p>
+            <p class="final-feedback">${finalComment}</p>
+          </div>
 `;
 
                 form.style.display = "none";
