@@ -1,45 +1,31 @@
-// config.js
-// Ce script définit une variable globale `cfg` utilisée par index.html
-
 window.cfg = {
   questions: [
     {
-      title: "Disgust",
+      title: "生氣",
+      comment: "B是噁心，不是生氣。生氣很容易與噁心混淆，因為這兩種表情通常都包括眉毛下垂和嘴唇上揚。然而，照片B的皺鼻，是噁心表情的重要特徵，在憤怒時不會出現",
       options: [
-        { image: "images/a1.jpg", comment: "Commentaire pour la réponse A1.", value: 1 },
-        { image: "images/a2.jpg", comment: "Commentaire pour la réponse A2.", value: 2 },
-        { image: "images/a3.jpg", comment: "Commentaire pour la réponse A3.", value: 3 },
-        { image: "images/a4.jpg", comment: "Commentaire pour la réponse A4.", value: 4 }
+        { image: "images/f16_dfh_ac.jpg", value: false },
+        { image: "images/f13_dfh_dc.jpg", value: true },
+        { image: "images/f18_dfh_ac.jpg", value: false },
+        { image: "images/f20_dfh_ac.jpg", value: false }
       ]
     },
     {
-      title: "Contempt",
+      title: "輕蔑",
+      comment: "B是噁心，不是輕蔑。三張輕蔑的照片中，嘴角的抿緊很明顯，而 B 照片中皺鼻子，你看到鼻翼翹起，鼻翼兩側和鼻樑上出現了皺紋，這些都是明顯的噁心跡象。",
       options: [
-        { image: "images/a1.jpg", comment: "Retour sur A1.", value: 1 },
-        { image: "images/a2.jpg", comment: "Retour sur A2.", value: 2 },
-        { image: "images/a3.jpg", comment: "Retour sur A3.", value: 3 },
-        { image: "images/a4.jpg", comment: "Retour sur A4.", value: 4 }
-      ]
-    },
-    {
-      title: "Question 3",
-      options: [
-        { image: "images/a1.jpg", comment: "Retour sur A1.", value: true },
-        { image: "images/a2.jpg", comment: "Retour sur A2.", value: false },
-        { image: "images/a3.jpg", comment: "Retour sur A3.", value: 3 },
-        { image: "images/a4.jpg", comment: "Retour sur A4.", value: 4 },
-        { image: "images/a1.jpg", comment: "Retour sur A5.", value: 5 }
-      ]
-    },
-    {
-      title: "Question 4",
-      options: [
-        { image: "images/f13_dfh_fc.jpg", comment: "Great thats totally it", value: 1 },
-        { image: "images/f13_dfh_ac.jpg", comment: "No good !", value: 2 },
-        { image: "images/f13_dfh_crc.jpg", comment: "Almost there.No good !", value: 3 },
-        { image: "images/f13_dfh_dc.jpg", comment: "Very bad", value: 4 }
+        { image: "images/f13_dfh_crc.jpg", value: false },
+        { image: "images/f16_dfh_dc.jpg", value: true },
+        { image: "images/f18_dfh_crc.jpg", value: false },
+        { image: "images/f20_dfh_clc.jpg", value: false }
       ]
     }
-    // Ajoutez d'autres questions ici…
+  ],
+feedbacks: [
+    { min: 0, max: 49, comment: "加油，再多練習一下" },
+    { min: 50, max: 59, comment: "你可以做的更好喔" },
+    { min: 60, max: 79, comment: "表現不錯，還有進步空間" },
+    { min: 80, max: 89, comment: "做的好，你可以辨識大部分表情" },
+    { min: 90, max: 100, comment: "太棒了，你是情緒辨識高手" }
   ]
 };
