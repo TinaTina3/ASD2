@@ -2,7 +2,7 @@ window.cfg = {
   questions: [
     {
       title: "生氣",
-      comment: "B是噁心，不是生氣。生氣很容易與噁心混淆，因為這兩種表情通常都包括眉毛下垂和嘴唇上揚。然而，照片B的皺鼻，是噁心表情的重要特徵，在憤怒時不會出現",
+      comment: "是噁心，不是生氣。生氣很容易與噁心混淆，因為這兩種表情通常都包括眉毛下垂和嘴唇上揚。然而，照片B的皺鼻，是噁心表情的重要特徵，在憤怒時不會出現",
       options: [
         { image: "images/f16_dfh_ac.jpg", value: false },
         { image: "images/f13_dfh_dc.jpg", value: true },
@@ -12,7 +12,7 @@ window.cfg = {
     },
     {
       title: "輕蔑",
-      comment: "B是噁心，不是輕蔑。三張輕蔑的照片中，嘴角的抿緊很明顯，而 B 照片中皺鼻子，你看到鼻翼翹起，鼻翼兩側和鼻樑上出現了皺紋，這些都是明顯的噁心跡象。",
+      comment: "是噁心，不是輕蔑。三張輕蔑的照片中，嘴角的抿緊很明顯，而  照片中皺鼻子，你看到鼻翼翹起，鼻翼兩側和鼻樑上出現了皺紋，這些都是明顯的噁心跡象。",
       options: [
         { image: "images/f13_dfh_crc.jpg", value: false },
         { image: "images/f16_dfh_dc.jpg", value: true },
