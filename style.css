@@ -416,7 +416,7 @@ textarea.visible {
 .result-icon {
     display: block;
     position: relative;
-    margin: 8px auto 0;
+    margin: 8px auto clamp(10px, 2vw, 16px);
     max-width: 40px;
     opacity: 0;
     transition: transform 0.3s ease, opacity 0.3s ease;
