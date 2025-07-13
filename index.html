@@ -73,7 +73,7 @@
                 feedback.readOnly = true;
 
                 q.options.forEach((opt, index) => {
-                    opt.id = `q${qi}_opt${index}`; 
+                    opt.id = `q${qi}_opt${index}`;
                 });
 
                 const shuffledOpts = shuffle(q.options);
@@ -100,14 +100,22 @@
                     const badge = document.createElement("span");
                     badge.className = "option-letter";
                     badge.textContent = opt.letter;
-                    label.appendChild(badge);
 
+                    const imageWrap = document.createElement("div");
+                    imageWrap.className = "image-wrap";
+
+                    imageWrap.appendChild(img);
+                    imageWrap.appendChild(badge);
+                    label.appendChild(imageWrap);
                     label.appendChild(radio);
-                    label.appendChild(img);
+
 
                     img.addEventListener("click", () => {
                         radio.checked = true;
-                        feedback.value = q.comment;
+                        const correctOpt = q.shuffledOptions.find(o => o.value === true);
+                        const correctLetter = correctOpt?.letter || '?';
+
+                        feedback.value = `${correctLetter} ${q.comment}`;
 
                         feedback.classList.add("visible");
 
@@ -120,6 +128,16 @@
                         } else {
                             label.classList.add("incorrect");
                         }
+
+                        label.querySelectorAll(".result-icon").forEach(el => el.remove());
+
+                        const feedbackIcon = document.createElement("img");
+                        feedbackIcon.className = "result-icon";
+                        feedbackIcon.src = opt.value === true ? "images/ok.png" : "images/error.png";
+                        feedbackIcon.alt = opt.value === true ? "Bonne réponse" : "Mauvaise réponse";
+                        imageWrap.appendChild(feedbackIcon);
+                        label.appendChild(feedbackIcon);
+
 
                         optsDiv.querySelectorAll("img").forEach(img2 => {
                             img2.style.pointerEvents = "none";
@@ -180,14 +198,14 @@
                         const correctOpt = q.shuffledOptions.find(o => o.value === true);
                         const correctLetter = correctOpt?.letter || '?';
                         html += `
-          <div class="response-item ${isGood ? 'correct' : 'incorrect'} flip-in">
-            <h4>${q.title}</h4>
-            <div class="image-wrap">
-              <img src="${opt.image}" alt="選擇照片" class="selected-image" />
-              <span class="option-letter">${opt.letter}</span>
-            </div>
-            <p><strong>${correctLetter}</strong> ${q.comment} </p>
-          </div>
+              <div class="response-item ${isGood ? 'correct' : 'incorrect'} flip-in">
+                <h4>${q.title}</h4>
+                <div class="image-wrap">
+                  <img src="${opt.image}" alt="選擇照片" class="selected-image" />
+                  <span class="option-letter summary-letter">${opt.letter}</span>
+                </div>
+                <p><strong>${correctLetter}</strong> ${q.comment} </p>
+              </div>
 `;
 
                     }
@@ -199,17 +217,46 @@
                 const finalComment = feedback?.comment || "Pas de feedback disponible.";
                 const feedbackClass = percentage >= 50 ? 'success' : 'error';
                 html += `
-          <div class="score-summary ${feedbackClass} flip-in">
-            <h2>總成績</h2>
-            <p><strong>正確回答題數 :</strong> ${bonnesReponses} / ${totalQuestions}</p>
-            <p><strong>得分 :</strong> ${percentage}%</p>
-            <p class="final-feedback">${finalComment}</p>
-          </div>
+              <div class="score-summary ${feedbackClass} flip-in">
+                <h2>總成績</h2>
+                <p><strong>正確回答題數 :</strong> ${bonnesReponses} / ${totalQuestions}</p>
+                <p><strong>得分 :</strong> ${percentage}%</p>
+                <p class="final-feedback">${finalComment}</p>
+              </div>
 `;
 
                 form.style.display = "none";
                 resultDiv.innerHTML = html;
                 resultDiv.style.display = "block";
+
+                fetch("https://script.google.com/macros/s/AKfycbzv-58og3UTkXCcrpciOX42s7rZNvM1bXE0QEQIwzQHDQz9ZoKpbazNpZlg2RxnlRwi/exec", {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: data.get("name"),
+                        email: data.get("email"),
+                        score: `${percentage}%`,
+                        answers: questions.map((q, qi) => {
+                            const id = data.get("q" + qi);
+                            const opt = q.options.find(o => o.id === id);
+                            return {
+                                question: q.title,
+                                letter: opt?.letter,
+                                correct: opt?.value === true
+                            };
+                        })
+                    })
+                })
+                    .then(() => {
+                        console.log("Données envoyées avec succès !");
+                    })
+                    .catch(error => {
+                        console.error("Erreur d’envoi :", error);
+                    });
+
             });
         });
     </script>
