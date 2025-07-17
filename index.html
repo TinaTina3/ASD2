@@ -36,16 +36,40 @@
                 .map(({ value }) => value);
         };
 
+        function getGenderFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const gender = params.get("gender");
+            return gender === "F" || gender === "M" || gender === "B" ? gender : "B";
+        }
+
+        function getRoundFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const round = params.get("round");
+            return round ? round : "1";
+        }
+
+
         document.addEventListener("DOMContentLoaded", () => {
             const form = document.getElementById("quizForm");
             const submitBtn = document.getElementById("submitBtn");
             const resultDiv = document.getElementById("resultContainer");
             const container = document.getElementById("questionsContainer");
-            const questions = window.cfg?.questions;
+            const selectedGender = getGenderFromURL();
+            let questions = window.cfg?.questions.filter(q => {
+                if (selectedGender === "B") return true;
+                return q.gender === selectedGender;
+            });
+            const round = getRoundFromURL();
+            questions = shuffle(questions); 
             const maxOptionsLength = Math.max(...questions.map(q => q.options.length));
             const letters = Array.from({ length: maxOptionsLength }, (_, i) =>
                 String.fromCharCode(65 + i) // 65 = code ASCII de 'A'
             );
+            const genreLabel = {
+                F: "女性專用",
+                M: "男性專用",
+                B: "通用題目"
+            };
 
             const feedbacks = window.cfg?.feedbacks;
 
@@ -53,6 +77,14 @@
                 container.innerHTML = "<p>Impossible de charger la configuration.</p>";
                 return;
             }
+
+            const infoBlock = document.createElement("h3");
+            infoBlock.textContent = `Genre : ${selectedGender} – Round : ${round}`;
+            infoBlock.className = "quiz-meta";
+
+            document.querySelector("h1").insertAdjacentElement("afterend", infoBlock);
+
+            const questionOrder = questions.map(q => q.title);
 
             questions.forEach((q, qi) => {
                 const bloc = document.createElement("div");
@@ -228,7 +260,7 @@
                 form.style.display = "none";
                 resultDiv.innerHTML = html;
                 resultDiv.style.display = "block";
-
+                const selectedGender = getGenderFromURL();
                 fetch("https://script.google.com/macros/s/AKfycbzv-58og3UTkXCcrpciOX42s7rZNvM1bXE0QEQIwzQHDQz9ZoKpbazNpZlg2RxnlRwi/exec", {
                     method: "POST",
                     mode: "no-cors",
@@ -238,7 +270,10 @@
                     body: JSON.stringify({
                         name: data.get("name"),
                         email: data.get("email"),
+                        gender: selectedGender,
+                        round: round,
                         score: `${percentage}%`,
+                        questionOrder: questionOrder,
                         answers: questions.map((q, qi) => {
                             const id = data.get("q" + qi);
                             const opt = q.options.find(o => o.id === id);
