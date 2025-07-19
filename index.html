@@ -11,6 +11,8 @@
     <p class="quiz-intro">
         人們臉孔的表情可以反映出內在的不同情緒，以及情緒的強度，表達幾種基本情緒的臉部表情具有普遍性，如驚訝、害怕、生氣、噁心、傷心、輕蔑和快樂等等，它們超越語言、文化、以及種族的差異，透過類似的臉部動作如額頭、眉毛、眼瞼、臉頰、鼻子、嘴唇和下巴的變化來呈現。
         試著透過這個辨認表情的練習來增加你的情緒技巧，學習辨識和回應他人的情緒。
+    </p>
+    <p class="quiz-intro">
         答題說明：對於題目的每種情緒，選擇不代表該情緒的臉部表情。
     </p>
     <form id="quizForm">
@@ -64,7 +66,7 @@
                 return q.gender === selectedGender;
             });
             const round = getRoundFromURL();
-            questions = shuffle(questions); 
+            questions = shuffle(questions);
             const maxOptionsLength = Math.max(...questions.map(q => q.options.length));
             const letters = Array.from({ length: maxOptionsLength }, (_, i) =>
                 String.fromCharCode(65 + i) // 65 = code ASCII de 'A'
@@ -234,14 +236,14 @@
                         const correctOpt = q.shuffledOptions.find(o => o.value === true);
                         const correctLetter = correctOpt?.letter || '?';
                         html += `
-              <div class="response-item ${isGood ? 'correct' : 'incorrect'} flip-in">
-                <h4>${q.title}</h4>
-                <div class="image-wrap">
-                  <img src="${opt.image}" alt="選擇照片" class="selected-image" />
-                  <span class="option-letter summary-letter">${opt.letter}</span>
-                </div>
-                <p><strong>${correctLetter}</strong> ${q.comment} </p>
-              </div>
+                      <div class="response-item ${isGood ? 'correct' : 'incorrect'} flip-in">
+                        <h4>${q.title}</h4>
+                        <div class="image-wrap">
+                          <img src="${opt.image}" alt="選擇照片" class="selected-image" />
+                          <span class="option-letter summary-letter">${opt.letter}</span>
+                        </div>
+                        <p><strong>${correctLetter}</strong> ${q.comment} </p>
+                      </div>
 `;
 
                     }
@@ -253,12 +255,12 @@
                 const finalComment = feedback?.comment || "Pas de feedback disponible.";
                 const feedbackClass = percentage >= 50 ? 'success' : 'error';
                 html += `
-              <div class="score-summary ${feedbackClass} flip-in">
-                <h2>總成績</h2>
-                <p><strong>正確回答題數 :</strong> ${bonnesReponses} / ${totalQuestions}</p>
-                <p><strong>得分 :</strong> ${percentage}%</p>
-                <p class="final-feedback">${finalComment}</p>
-              </div>
+                      <div class="score-summary ${feedbackClass} flip-in">
+                        <h2>總成績</h2>
+                        <p><strong>正確回答題數 :</strong> ${bonnesReponses} / ${totalQuestions}</p>
+                        <p><strong>得分 :</strong> ${percentage}%</p>
+                        <p class="final-feedback">${finalComment}</p>
+                      </div>
 `;
 
                 form.style.display = "none";
