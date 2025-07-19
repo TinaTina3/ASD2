@@ -108,6 +108,7 @@ textarea {
   resize: none;
   font-size: 0.95rem;
   background: #fafafa;
+  height: 6.6em;
 }
 
 button {
