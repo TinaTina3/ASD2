@@ -66,9 +66,9 @@
                 String.fromCharCode(65 + i) // 65 = code ASCII de 'A'
             );
             const genreLabel = {
-                F: "女性專用",
-                M: "男性專用",
-                B: "通用題目"
+                F: "亞洲女性",
+                M: "亞洲男性",
+                B: "男女皆有"
             };
 
             const feedbacks = window.cfg?.feedbacks;
@@ -79,7 +79,7 @@
             }
 
             const infoBlock = document.createElement("h3");
-            infoBlock.textContent = `Genre : ${selectedGender} – Round : ${round}`;
+            infoBlock.textContent = `性別 : ${genreLabel[selectedGender]} – 回合 : ${round}`;
             infoBlock.className = "quiz-meta";
 
             document.querySelector("h1").insertAdjacentElement("afterend", infoBlock);
