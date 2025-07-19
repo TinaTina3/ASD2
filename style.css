@@ -457,3 +457,17 @@ textarea.visible {
     color: #666;
     font-size: 1rem;
 }
+
+.quiz-intro {
+    max-width: 800px;
+    margin: -20px auto 40px;
+    padding: 0 15px;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #444;
+    text-align: justify;
+    border-left: 4px solid var(--accent-color);
+    padding-left: 16px;
+    background: #f9f9fc;
+    border-radius: var(--border-radius);
+}
