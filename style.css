@@ -460,11 +460,10 @@ textarea.visible {
 
 .quiz-intro {
     font-family: "Segoe UI", Roboto, sans-serif;
-    font-weight: bold;
     max-width: 800px;
     margin: -20px auto 40px;
     padding: 0 15px;
-    font-size: 1rem;
+    font-size: 1.1rem;
     line-height: 1.7;
     color: #444;
     text-align: justify;
