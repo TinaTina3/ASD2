@@ -459,6 +459,8 @@ textarea.visible {
 }
 
 .quiz-intro {
+    font-family: "Segoe UI", Roboto, sans-serif;
+    font-weight: bold;
     max-width: 800px;
     margin: -20px auto 40px;
     padding: 0 15px;
